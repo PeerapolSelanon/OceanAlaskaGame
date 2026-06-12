@@ -19,6 +19,7 @@ export function shuffle(arr, rng = Math.random) {
   return out;
 }
 
+// Note: returns fewer than n items if n > pool.length — callers must size n to the pool.
 export function sample(pool, n, rng = Math.random) {
   return shuffle(pool, rng).slice(0, n);
 }

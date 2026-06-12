@@ -1,4 +1,4 @@
-import { ANIMALS, playCry } from '../core/animals.js';
+import { ANIMALS, byId, playCry } from '../core/animals.js';
 import { speakName, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
 
@@ -6,7 +6,9 @@ const MAX_ON_SCREEN = 6;
 
 export const tapSea = {
   _container: null,
+  _timers: [],
   init(container, go) {
+    this._timers = [];
     this._container = container;
     container.insertAdjacentHTML('beforeend', `
       <button class="btn btn-round" id="back-btn" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
@@ -30,7 +32,8 @@ export const tapSea = {
     if (hint) hint.remove();
     const hitAnimal = e.target.closest('.animal-spot');
     if (hitAnimal) {
-      const animal = ANIMALS.find(a => a.id === hitAnimal.dataset.id);
+      const animal = byId(hitAnimal.dataset.id);
+      if (!animal) return;
       const svg = hitAnimal.querySelector('svg');
       svg.classList.remove('boing'); void svg.getBoundingClientRect(); // restart animation
       svg.classList.add('boing');
@@ -48,17 +51,22 @@ export const tapSea = {
     spot.style.cssText = `position:absolute;left:${e.clientX - size / 2}px;top:${e.clientY - size / 2}px;cursor:pointer;`;
     const svg = animal.make(size);
     svg.classList.add('pop-in');
-    setTimeout(() => { svg.classList.remove('pop-in'); svg.classList.add('float'); }, 500);
+    this._timers.push(setTimeout(() => { svg.classList.remove('pop-in'); svg.classList.add('float'); }, 500));
     spot.appendChild(svg);
     sea.appendChild(spot);
     speakName(animal, getLang());
-    // keep at most MAX_ON_SCREEN: fade out the oldest
-    const spots = sea.querySelectorAll('.animal-spot');
-    if (spots.length > MAX_ON_SCREEN) {
-      const oldest = spots[0];
+    // keep at most MAX_ON_SCREEN: fade out the oldest (skip ones already fading)
+    const spots = [...sea.querySelectorAll('.animal-spot:not([data-fading])')];
+    for (let i = 0; i < spots.length - MAX_ON_SCREEN; i++) {
+      const oldest = spots[i];
+      oldest.dataset.fading = '1';
       oldest.querySelector('svg').classList.add('fade-out');
-      setTimeout(() => oldest.remove(), 800);
+      this._timers.push(setTimeout(() => oldest.remove(), 800));
     }
   },
-  destroy() { this._container = null; },
+  destroy() {
+    this._timers.forEach(clearTimeout);
+    this._timers = [];
+    this._container = null;
+  },
 };
