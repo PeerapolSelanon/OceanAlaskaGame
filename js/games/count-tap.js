@@ -28,8 +28,8 @@ export const countTap = {
     const c = this._container;
     this._locked = false;
     this._question = makeQuestion(this._state.maxN);
-    const animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
-    this._question.animal = animal;
+    this._animal = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+    const animal = this._animal;
 
     const promptText = getLang() === 'th'
       ? `มี${animal.th}กี่ตัวนะ?` : `How many ${animal.en.toLowerCase()}s?`;
@@ -38,16 +38,16 @@ export const countTap = {
 
     const field = c.querySelector('#field');
     field.innerHTML = '';
-    const size = Math.min(170, Math.max(110, window.innerWidth * 0.11));
+    const size = Math.min(150, Math.max(110, window.innerWidth * 0.11));
     // scatter without overlap: grid cells shuffled, place count animals
-    const cols = 4, rows = 2;
+    const cols = 5, rows = 2;
     const cells = [];
     for (let r = 0; r < rows; r++) for (let col = 0; col < cols; col++) cells.push([col, r]);
     cells.sort(() => Math.random() - 0.5);
-    for (let i = 0; i < this._question.count; i++) {
+    for (let i = 0; i < Math.min(this._question.count, cells.length); i++) {
       const [col, row] = cells[i];
       const spot = document.createElement('div');
-      spot.style.cssText = `position:absolute;left:${col * 25 + 4 + Math.random() * 6}%;top:${row * 50 + 5 + Math.random() * 12}%;`;
+      spot.style.cssText = `position:absolute;left:${col * 20 + 3 + Math.random() * 5}%;top:${row * 50 + 5 + Math.random() * 12}%;`;
       const svg = animal.make(size);
       svg.classList.add('float');
       svg.style.animationDelay = `${Math.random() * 2}s`;
