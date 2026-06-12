@@ -3,6 +3,7 @@ import { speak, speakName, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
 import { pickRound } from './logic/round-utils.js';
 import { confetti } from '../core/confetti.js';
+import { onActivate } from '../core/ui.js';
 
 const ROUND_SIZE = 3;
 
@@ -18,11 +19,11 @@ export const shadowMatch = {
     this._remaining = 0;
     this._timers = [];
     container.insertAdjacentHTML('beforeend', `
-      <button class="btn btn-round" id="back-btn" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
+      <button class="btn btn-round" id="back-btn" aria-label="${t('back')}" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
       <div id="shadow-row" style="position:absolute;top:8vh;width:100%;display:flex;justify-content:center;gap:6vw;"></div>
       <div id="animal-row" style="position:absolute;bottom:6vh;width:100%;display:flex;justify-content:center;gap:6vw;"></div>
     `);
-    container.querySelector('#back-btn').addEventListener('pointerup', () => go('hub'));
+    onActivate(container.querySelector('#back-btn'), () => go('hub'));
     speak(t('dragToShadow'), getLang());
     this._newRound();
   },
@@ -136,5 +137,6 @@ export const shadowMatch = {
     this._timers = [];
     this._container = null;
     this._drag = null;
+    try { speechSynthesis.cancel(); } catch {}
   },
 };

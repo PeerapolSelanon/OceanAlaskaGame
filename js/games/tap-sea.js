@@ -1,6 +1,7 @@
 import { ANIMALS, byId, playCry } from '../core/animals.js';
 import { speakName, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
+import { onActivate } from '../core/ui.js';
 
 const MAX_ON_SCREEN = 6;
 
@@ -11,7 +12,7 @@ export const tapSea = {
     this._timers = [];
     this._container = container;
     container.insertAdjacentHTML('beforeend', `
-      <button class="btn btn-round" id="back-btn" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
+      <button class="btn btn-round" id="back-btn" aria-label="${t('back')}" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
       <div id="sea" style="position:absolute;inset:0;"></div>
       <div id="hint" style="position:absolute;bottom:4vh;width:100%;text-align:center;color:#fff;font-size:clamp(18px,3vw,28px);font-weight:700;text-shadow:0 2px 6px rgba(0,30,60,.5);pointer-events:none;">${t('tapAnywhere')}</div>
     `);
@@ -23,7 +24,7 @@ export const tapSea = {
       b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random() * 100}%;bottom:-20px;animation-duration:${6 + Math.random() * 8}s;animation-delay:${Math.random() * 6}s;`;
       container.querySelector('#sea').appendChild(b);
     }
-    container.querySelector('#back-btn').addEventListener('pointerup', e => { e.stopPropagation(); go('hub'); });
+    onActivate(container.querySelector('#back-btn'), e => { e.stopPropagation(); go('hub'); });
     container.querySelector('#sea').addEventListener('pointerdown', (e) => this._onTap(e));
   },
   _onTap(e) {
@@ -68,5 +69,6 @@ export const tapSea = {
     this._timers.forEach(clearTimeout);
     this._timers = [];
     this._container = null;
+    try { speechSynthesis.cancel(); } catch {}
   },
 };

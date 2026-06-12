@@ -1,6 +1,7 @@
 import { t, getLang, toggleLang } from './core/i18n.js';
 import { speak, sfx, isSoundOn, setSoundOn, warmUp, hasVoice } from './core/audio.js';
-import { byId } from './core/animals.js';
+import { byId, playCry } from './core/animals.js';
+import { onActivate } from './core/ui.js';
 
 const GAME_BUTTONS = [
   { scene: 'tap-sea', nameKey: 'tapSea', ageKey: 'age12', animal: 'orca', color: '#79b8d6' },
@@ -11,13 +12,14 @@ const GAME_BUTTONS = [
 
 export const hub = {
   _nav: null,
+  _hold: null,
   _voiceCheck: null,
   init(container, go) {
     container.insertAdjacentHTML('beforeend', `
       <div class="topbar">
         <div class="title">🌊 <span data-i18n="appTitle"></span></div>
         <div class="controls">
-          <button class="btn" id="lang-btn" style="padding:0 20px;font-weight:800;color:#155e8d;font-size:18px;min-height:56px;"></button>
+          <button class="btn" id="lang-btn" style="padding:0 20px;font-weight:800;color:#155e8d;font-size:18px;min-height:56px;"><span class="hold-fill"></span><span class="lang-label"></span></button>
           <button class="btn btn-round" id="sound-btn"></button>
         </div>
       </div>
@@ -25,40 +27,76 @@ export const hub = {
     `);
     const refreshText = () => {
       container.querySelector('[data-i18n="appTitle"]').textContent = t('appTitle');
-      container.querySelector('#lang-btn').textContent = getLang() === 'th' ? 'ไทย → EN' : 'EN → ไทย';
-      container.querySelector('#sound-btn').textContent = isSoundOn() ? '🔊' : '🔇';
+      const langBtn = container.querySelector('#lang-btn');
+      langBtn.querySelector('.lang-label').textContent = getLang() === 'th' ? 'ไทย → EN' : 'EN → ไทย';
+      langBtn.setAttribute('aria-label', t('switchLang'));
+      langBtn.title = t('switchLang');
+      const soundBtn = container.querySelector('#sound-btn');
+      soundBtn.textContent = isSoundOn() ? '🔊' : '🔇';
+      soundBtn.setAttribute('aria-label', isSoundOn() ? t('muteSound') : t('unmuteSound'));
       container.querySelectorAll('[data-game-name]').forEach(n => { n.textContent = t(n.dataset.gameName); });
       container.querySelectorAll('[data-game-age]').forEach(n => { n.textContent = t(n.dataset.gameAge); });
     };
 
     const grid = container.querySelector('#hub-grid');
-    for (const g of GAME_BUTTONS) {
+    GAME_BUTTONS.forEach((g, i) => {
       const btn = document.createElement('button');
-      btn.className = 'btn';
-      btn.style.cssText = `display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-bottom:6px solid ${g.color};overflow:hidden;`;
+      btn.className = 'btn game-tile';
+      btn.style.borderBottom = `6px solid ${g.color}`;
+      const zone = document.createElement('div');
+      zone.className = 'animal-zone';
       const svg = byId(g.animal).make(150);
       svg.classList.add('float');
-      btn.appendChild(svg);
+      // each animal swims and blinks on its own beat, like a real tidepool
+      svg.style.animationDuration = `${3 + i * 0.35}s`;
+      svg.style.animationDelay = `-${i * 0.9}s`;
+      svg.style.setProperty('--blink-delay', `${i * 1.1}s`);
+      zone.appendChild(svg);
+      btn.appendChild(zone);
       btn.insertAdjacentHTML('beforeend', `
-        <div data-game-name="${g.nameKey}" style="font-weight:800;font-size:clamp(16px,2.6vw,24px);color:#13496e;"></div>
-        <div data-game-age="${g.ageKey}" style="font-size:clamp(11px,1.6vw,15px);color:#5b87a3;"></div>
+        <div class="game-name" data-game-name="${g.nameKey}"></div>
+        <div class="game-age" data-game-age="${g.ageKey}"></div>
       `);
-      btn.addEventListener('pointerup', () => {
-        warmUp(); sfx.pop();
+      const launch = () => {
+        if (hub._nav) return; // already heading into a game
+        warmUp();
+        playCry(byId(g.animal));
+        svg.classList.remove('float');
+        svg.style.animationDuration = ''; // stagger values are for float only
+        svg.style.animationDelay = '';
+        svg.classList.add('boing');
         speak(t(g.nameKey), getLang());
-        hub._nav = setTimeout(() => go(g.scene), 350);
-      });
+        hub._nav = setTimeout(() => go(g.scene), 650);
+      };
+      onActivate(btn, launch);
       grid.appendChild(btn);
-    }
-
-    container.querySelector('#lang-btn').addEventListener('pointerup', () => {
-      warmUp(); toggleLang(); refreshText();
-      speak(t('appTitle'), getLang());
     });
-    container.querySelector('#sound-btn').addEventListener('pointerup', () => {
+
+    // language switch: press-and-hold so little hands can't flip it by accident
+    // (keyboard Enter/Space still toggles instantly — that's a parent at a PC)
+    const langBtn = container.querySelector('#lang-btn');
+    const doToggleLang = () => {
+      toggleLang(); refreshText();
+      speak(t('appTitle'), getLang());
+    };
+    const cancelHold = () => {
+      langBtn.classList.remove('holding');
+      clearTimeout(hub._hold);
+      hub._hold = null;
+    };
+    langBtn.addEventListener('pointerdown', () => {
+      warmUp();
+      langBtn.classList.add('holding');
+      hub._hold = setTimeout(() => { cancelHold(); doToggleLang(); }, 700);
+    });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(ev => langBtn.addEventListener(ev, cancelHold));
+    langBtn.addEventListener('click', (e) => { if (e.detail === 0) { warmUp(); doToggleLang(); } });
+
+    const toggleSound = () => {
       warmUp(); setSoundOn(!isSoundOn()); refreshText();
       if (isSoundOn()) sfx.ding();
-    });
+    };
+    onActivate(container.querySelector('#sound-btn'), toggleSound);
     refreshText();
 
     // Parent-facing note when the device has no Thai voice installed (e.g.
@@ -68,7 +106,7 @@ export const hub = {
       if (getLang() === 'th' && !hasVoice('th') && !container.querySelector('#voice-note')) {
         const note = document.createElement('div');
         note.id = 'voice-note';
-        note.textContent = 'เครื่องนี้ยังไม่มีเสียงพูดภาษาไทย เกมจะพูดเฉพาะภาษาอังกฤษ — วิธีเพิ่มเสียงไทยอยู่ใน README';
+        note.textContent = 'เครื่องนี้ยังไม่มีเสียงพูดภาษาไทย เกมจะพูดเฉพาะภาษาอังกฤษ — ลองเปิดด้วย Microsoft Edge หรือ iPad ซึ่งมีเสียงไทยในตัว';
         note.style.cssText = 'position:absolute;bottom:4px;width:100%;text-align:center;color:#dceefb;font-size:13px;text-shadow:0 1px 3px rgba(0,30,60,.6);pointer-events:none;';
         container.appendChild(note);
       }
@@ -77,6 +115,8 @@ export const hub = {
   destroy() {
     clearTimeout(this._nav);
     this._nav = null;
+    clearTimeout(this._hold);
+    this._hold = null;
     clearTimeout(this._voiceCheck);
     this._voiceCheck = null;
     try { speechSynthesis.cancel(); } catch {}

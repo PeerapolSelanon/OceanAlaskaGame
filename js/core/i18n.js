@@ -17,6 +17,10 @@ const STRINGS = {
   whereIs: ['ตัวไหนคือ', 'Where is the'],
   dragToShadow: ['ลากสัตว์ไปหาเงาของมันนะ', 'Drag each animal to its shadow'],
   tapAnywhere: ['แตะที่ทะเลเลย!', 'Tap the sea!'],
+  switchLang: ['เปลี่ยนภาษา (กดค้างไว้)', 'Switch language (press and hold)'],
+  muteSound: ['ปิดเสียง', 'Mute sound'],
+  listenAgain: ['ฟังอีกครั้ง', 'Listen again'],
+  unmuteSound: ['เปิดเสียง', 'Turn sound on'],
 };
 
 let lang = get('lang', 'th');

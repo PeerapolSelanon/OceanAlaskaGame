@@ -3,6 +3,7 @@ import { speak, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
 import { makeQuestion, nextDifficulty } from './logic/count-logic.js';
 import { confetti } from '../core/confetti.js';
+import { onActivate } from '../core/ui.js';
 
 export const countTap = {
   _container: null,
@@ -16,12 +17,12 @@ export const countTap = {
     this._state = { maxN: 3, streak: 0, misses: 0 };
     this._timers = [];
     container.insertAdjacentHTML('beforeend', `
-      <button class="btn btn-round" id="back-btn" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
-      <div id="prompt" style="position:absolute;top:14px;width:100%;text-align:center;color:#fff;font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:0 2px 6px rgba(0,30,60,.5);pointer-events:none;"></div>
+      <button class="btn btn-round" id="back-btn" aria-label="${t('back')}" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
+      <div id="prompt" style="position:absolute;top:14px;width:100%;text-align:center;color:#13496e;font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:0 1px 0 rgba(255,255,255,.35);pointer-events:none;"></div>
       <div id="field" style="position:absolute;inset:70px 2vw 130px;"></div>
       <div id="choices" style="position:absolute;bottom:2vh;width:100%;display:flex;justify-content:center;gap:4vw;"></div>
     `);
-    container.querySelector('#back-btn').addEventListener('pointerup', () => go('hub'));
+    onActivate(container.querySelector('#back-btn'), () => go('hub'));
     this._newRound();
   },
 
@@ -63,7 +64,7 @@ export const countTap = {
       btn.className = 'btn';
       btn.textContent = n;
       btn.style.cssText = 'width:110px;height:90px;font-size:44px;font-weight:800;color:#13496e;';
-      btn.addEventListener('pointerup', () => this._answer(n, btn));
+      onActivate(btn, () => this._answer(n, btn));
       choicesBox.appendChild(btn);
     }
   },
@@ -91,5 +92,6 @@ export const countTap = {
     this._timers.forEach(clearTimeout);
     this._timers = [];
     this._container = null;
+    try { speechSynthesis.cancel(); } catch {}
   },
 };

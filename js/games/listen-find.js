@@ -3,6 +3,7 @@ import { speak, speakName, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
 import { pickQuestion } from './logic/round-utils.js';
 import { confetti } from '../core/confetti.js';
+import { onActivate } from '../core/ui.js';
 
 const CHOICES = 4;
 const ANIMAL_IDS = ANIMALS.map(a => a.id);
@@ -19,13 +20,13 @@ export const listenFind = {
     this._target = null;
     this._timers = [];
     container.insertAdjacentHTML('beforeend', `
-      <button class="btn btn-round" id="back-btn" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
-      <button class="btn btn-round" id="repeat-btn" style="position:absolute;top:12px;right:12px;z-index:10;">🔊</button>
-      <div id="prompt" style="position:absolute;top:16px;width:100%;text-align:center;color:#fff;font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:0 2px 6px rgba(0,30,60,.5);pointer-events:none;"></div>
+      <button class="btn btn-round" id="back-btn" aria-label="${t('back')}" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
+      <button class="btn btn-round" id="repeat-btn" aria-label="${t('listenAgain')}" style="position:absolute;top:12px;right:12px;z-index:10;">🔊</button>
+      <div id="prompt" style="position:absolute;top:16px;width:100%;text-align:center;color:#13496e;font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:0 1px 0 rgba(255,255,255,.35);pointer-events:none;"></div>
       <div id="grid" style="position:absolute;inset:90px 6vw 6vh;display:grid;grid-template-columns:1fr 1fr;gap:3vh 4vw;justify-items:center;align-items:center;"></div>
     `);
-    container.querySelector('#back-btn').addEventListener('pointerup', () => go('hub'));
-    container.querySelector('#repeat-btn').addEventListener('pointerup', () => this._sayPrompt());
+    onActivate(container.querySelector('#back-btn'), () => go('hub'));
+    onActivate(container.querySelector('#repeat-btn'), () => this._sayPrompt());
     this._newRound();
   },
 
@@ -49,12 +50,13 @@ export const listenFind = {
       const card = document.createElement('button');
       card.className = 'btn';
       card.dataset.id = id;
+      card.setAttribute('aria-label', `${byId(id).th} — ${byId(id).en}`);
       card.style.cssText = 'padding:12px 20px;background:rgba(255,255,255,.92);';
       const svg = byId(id).make(size);
       svg.classList.add('float');
       svg.style.animationDelay = `${Math.random() * 2}s`;
       card.appendChild(svg);
-      card.addEventListener('pointerup', () => this._answer(card));
+      onActivate(card, () => this._answer(card));
       grid.appendChild(card);
     }
     this._sayPrompt();
@@ -85,5 +87,6 @@ export const listenFind = {
     this._timers.forEach(clearTimeout);
     this._timers = [];
     this._container = null;
+    try { speechSynthesis.cancel(); } catch {}
   },
 };
