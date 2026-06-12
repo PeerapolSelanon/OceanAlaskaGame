@@ -1,5 +1,5 @@
 export function confetti(container, count = 30) {
-  const colors = ['#f2a25c', '#6ec99a', '#79b8d6', '#c98ad9', '#f7d154'];
+  const colors = ['var(--sunset-orange)', 'var(--kelp-green)', 'var(--glacier-blue)', 'var(--anemone-purple)', 'var(--sun-gold)'];
   const timers = [];
   for (let i = 0; i < count; i++) {
     const p = document.createElement('div');

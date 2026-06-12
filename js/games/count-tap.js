@@ -18,7 +18,7 @@ export const countTap = {
     this._timers = [];
     container.insertAdjacentHTML('beforeend', `
       <button class="btn btn-round" id="back-btn" aria-label="${t('back')}" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
-      <div id="prompt" style="position:absolute;top:14px;width:100%;text-align:center;color:#13496e;font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:0 1px 0 rgba(255,255,255,.35);pointer-events:none;"></div>
+      <div id="prompt" style="position:absolute;top:14px;width:100%;text-align:center;color:var(--ink-deep);font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:var(--text-halo);pointer-events:none;"></div>
       <div id="field" style="position:absolute;inset:70px 2vw 130px;"></div>
       <div id="choices" style="position:absolute;bottom:2vh;width:100%;display:flex;justify-content:center;gap:4vw;"></div>
     `);
@@ -63,7 +63,7 @@ export const countTap = {
       const btn = document.createElement('button');
       btn.className = 'btn';
       btn.textContent = n;
-      btn.style.cssText = 'width:110px;height:90px;font-size:44px;font-weight:800;color:#13496e;';
+      btn.style.cssText = 'width:110px;height:90px;font-size:44px;font-weight:800;color:var(--ink-deep);';
       onActivate(btn, () => this._answer(n, btn));
       choicesBox.appendChild(btn);
     }
@@ -77,7 +77,7 @@ export const countTap = {
       this._locked = true;
       sfx.cheer();
       speak(t('great'), getLang());
-      btn.style.background = 'linear-gradient(180deg,#a8e6c4,#6ec99a)';
+      btn.style.background = 'linear-gradient(180deg,var(--kelp-light),var(--kelp-green))';
       this._timers.push(...confetti(this._container));
       this._timers.push(setTimeout(() => this._newRound(), 1800));
     } else {

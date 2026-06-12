@@ -67,10 +67,13 @@ export const shadowMatch = {
     try { piece.setPointerCapture(e.pointerId); } catch { /* synthetic events in tests lack active pointer */ }
     const rect = piece.getBoundingClientRect();
     this._drag = { piece, dx: e.clientX - rect.left, dy: e.clientY - rect.top, homeRect: rect };
+    // pin the piece at its home spot once, then move with transform only:
+    // composite-layer animation, no layout work per pointermove
     piece.style.zIndex = '20';
     piece.style.position = 'fixed';
     piece.style.left = rect.left + 'px';
     piece.style.top = rect.top + 'px';
+    piece.style.transition = 'none';
     sfx.bubble();
     const move = (ev) => this._moveDrag(ev);
     const up = (ev) => {
@@ -86,8 +89,9 @@ export const shadowMatch = {
 
   _moveDrag(e) {
     if (!this._drag) return;
-    this._drag.piece.style.left = (e.clientX - this._drag.dx) + 'px';
-    this._drag.piece.style.top = (e.clientY - this._drag.dy) + 'px';
+    const { piece, dx, dy, homeRect } = this._drag;
+    piece.style.transform =
+      `translate3d(${e.clientX - dx - homeRect.left}px, ${e.clientY - dy - homeRect.top}px, 0)`;
   },
 
   _endDrag() {
@@ -105,9 +109,8 @@ export const shadowMatch = {
     if (slot && slot.dataset.id === piece.dataset.id) {
       // snap into the shadow
       const r = slot.getBoundingClientRect();
-      piece.style.transition = 'left .2s, top .2s';
-      piece.style.left = r.left + 'px';
-      piece.style.top = r.top + 'px';
+      piece.style.transition = 'transform .2s';
+      piece.style.transform = `translate3d(${r.left - homeRect.left}px, ${r.top - homeRect.top}px, 0)`;
       piece.dataset.done = '1';
       slot.dataset.filled = '1';
       sfx.ding();
@@ -123,9 +126,8 @@ export const shadowMatch = {
       }
     } else {
       // gentle bounce back, no negative feedback
-      piece.style.transition = 'left .35s ease, top .35s ease';
-      piece.style.left = homeRect.left + 'px';
-      piece.style.top = homeRect.top + 'px';
+      piece.style.transition = 'transform .35s ease';
+      piece.style.transform = 'translate3d(0, 0, 0)';
       this._timers.push(setTimeout(() => {
         piece.style.cssText = 'touch-action:none;cursor:grab;position:relative;';
       }, 380));

@@ -15,7 +15,9 @@ colors:
   glacier-blue: "#79b8d6"
   sunset-orange: "#f2a25c"
   kelp-green: "#6ec99a"
+  kelp-light: "#a8e6c4"
   anemone-purple: "#c98ad9"
+  sun-gold: "#f7d154"
 typography:
   display:
     fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif"
@@ -87,7 +89,9 @@ components:
 - **Sunset Orange** (#f2a25c): เกมจับคู่เงา (2-4 ปี)
 - **Kelp Green** (#6ec99a): เกมนับสัตว์ทะเล (3-5 ปี)
 - **Anemone Purple** (#c98ad9): เกมเสียงเรียกใคร (3-5 ปี)
+- **Sun Gold** (#f7d154): สีที่ห้าของชุดฉลอง — ใช้เฉพาะในคอนเฟตตีร่วมกับสีประจำเกมทั้งสี่
 - ใช้เป็นขอบล่างหนา 6px ของการ์ดเกมบน hub และเป็นสีนำของฉากในเกมนั้น — หนึ่งเกม หนึ่งสี ห้ามสลับ
+- **Source of truth ในโค้ด:** ทุกสี UI ถูกประกาศเป็น CSS custom properties บน `:root` ใน `css/main.css` ชื่อตรงกับเอกสารนี้ — โค้ดใหม่ต้องใช้ `var(--token)` ห้าม hardcode hex (ยกเว้นสีงานศิลป์สัตว์ใน animals.js)
 
 ### Neutral — เสาน้ำ (background world)
 - **Sky Foam** (#bfe6f2): ผิวน้ำรับแสง — ขอบบนสุดของ gradient

@@ -22,8 +22,8 @@ export const listenFind = {
     container.insertAdjacentHTML('beforeend', `
       <button class="btn btn-round" id="back-btn" aria-label="${t('back')}" style="position:absolute;top:12px;left:12px;z-index:10;">🏠</button>
       <button class="btn btn-round" id="repeat-btn" aria-label="${t('listenAgain')}" style="position:absolute;top:12px;right:12px;z-index:10;">🔊</button>
-      <div id="prompt" style="position:absolute;top:16px;width:100%;text-align:center;color:#13496e;font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:0 1px 0 rgba(255,255,255,.35);pointer-events:none;"></div>
-      <div id="grid" style="position:absolute;inset:90px 6vw 6vh;display:grid;grid-template-columns:1fr 1fr;gap:3vh 4vw;justify-items:center;align-items:center;"></div>
+      <div id="prompt" style="position:absolute;top:16px;width:100%;text-align:center;color:var(--ink-deep);font-size:clamp(20px,3.4vw,32px);font-weight:800;text-shadow:var(--text-halo);pointer-events:none;"></div>
+      <div id="grid" style="position:absolute;inset:90px 6vw 6vh;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3vh 4vw;"></div>
     `);
     onActivate(container.querySelector('#back-btn'), () => go('hub'));
     onActivate(container.querySelector('#repeat-btn'), () => this._sayPrompt());
@@ -45,15 +45,18 @@ export const listenFind = {
     this._target = byId(target);
     const grid = this._container.querySelector('#grid');
     grid.innerHTML = '';
-    const size = Math.min(210, Math.max(140, window.innerWidth * 0.15));
     for (const id of choices) {
       const card = document.createElement('button');
       card.className = 'btn';
       card.dataset.id = id;
       card.setAttribute('aria-label', `${byId(id).th} — ${byId(id).en}`);
-      card.style.cssText = 'padding:12px 20px;background:rgba(255,255,255,.92);';
-      const svg = byId(id).make(size);
+      // cards stretch to fill their grid cell; the svg letterboxes inside,
+      // so every animal reads the same size regardless of its aspect ratio
+      card.style.cssText = 'width:100%;height:100%;min-width:0;min-height:0;padding:12px 20px;background:rgba(255,255,255,.92);';
+      const svg = byId(id).make(150);
       svg.classList.add('float');
+      svg.style.width = '100%';
+      svg.style.height = '100%';
       svg.style.animationDelay = `${Math.random() * 2}s`;
       card.appendChild(svg);
       onActivate(card, () => this._answer(card));
@@ -71,7 +74,7 @@ export const listenFind = {
       svg.classList.add('boing');
       playCry(this._target);
       speakName(this._target, getLang());
-      card.style.background = 'linear-gradient(180deg,#a8e6c4,#6ec99a)';
+      card.style.background = 'linear-gradient(180deg,var(--kelp-light),var(--kelp-green))';
       this._timers.push(...confetti(this._container));
       this._timers.push(setTimeout(() => this._newRound(), 2400));
     } else {

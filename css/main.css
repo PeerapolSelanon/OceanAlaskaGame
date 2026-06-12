@@ -1,25 +1,48 @@
+/* UI palette tokens — names match DESIGN.md. Animal artwork colors live in
+   js/core/animals.js and are intentionally NOT tokens (art, not theme). */
+:root {
+  --sky-foam: #bfe6f2;
+  --shallow-water: #6db7d8;
+  --mid-water: #2f86b8;
+  --deep-water: #155e8d;
+  --abyss: #0d3f63;
+  --foam-white: #ffffff;
+  --ice-mist: #e8f2f8;
+  --ink-deep: #13496e;
+  --slate-muted: #3f6a87;
+  --glow-pale: #dceefb;
+  --glacier-blue: #79b8d6;
+  --sunset-orange: #f2a25c;
+  --kelp-green: #6ec99a;
+  --kelp-light: #a8e6c4; /* with kelp-green: the correct-answer highlight surface */
+  --anemone-purple: #c98ad9;
+  --sun-gold: #f7d154;
+  --shadow-soft-lift: 0 6px 16px rgba(0, 20, 40, .3);
+  --text-halo: 0 1px 0 rgba(255, 255, 255, .35);
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { height: 100%; overflow: hidden; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
 body { touch-action: none; user-select: none; -webkit-user-select: none; }
 
-#app { position: fixed; inset: 0; background: linear-gradient(180deg, #bfe6f2 0%, #6db7d8 12%, #2f86b8 45%, #155e8d 78%, #0d3f63 100%); overflow: hidden; }
+#app { position: fixed; inset: 0; background: linear-gradient(180deg, var(--sky-foam) 0%, var(--shallow-water) 12%, var(--mid-water) 45%, var(--deep-water) 78%, var(--abyss) 100%); overflow: hidden; }
 
 /* rotate hint: only shown in portrait */
-#rotate-hint { display: none; position: fixed; inset: 0; z-index: 99; background: #0d3f63; color: #fff; text-align: center; flex-direction: column; align-items: center; justify-content: center; gap: 16px; font-size: 22px; line-height: 1.6; }
+#rotate-hint { display: none; position: fixed; inset: 0; z-index: 99; background: var(--abyss); color: #fff; text-align: center; flex-direction: column; align-items: center; justify-content: center; gap: 16px; font-size: 22px; line-height: 1.6; }
 #rotate-hint .rotate-icon { font-size: 64px; animation: spin 2.5s linear infinite; }
 @media (orientation: portrait) { #rotate-hint { display: flex; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* big tappable buttons */
-.btn { min-width: 80px; min-height: 80px; border: none; cursor: pointer; border-radius: 22px; background: linear-gradient(180deg, #ffffff, #e8f2f8); box-shadow: 0 6px 16px rgba(0,20,40,.3); font-family: inherit; transition: transform .12s ease; }
+.btn { min-width: 80px; min-height: 80px; border: none; cursor: pointer; border-radius: 22px; background: linear-gradient(180deg, var(--foam-white), var(--ice-mist)); box-shadow: var(--shadow-soft-lift); font-family: inherit; transition: transform .12s ease; }
 .btn:active { transform: scale(.93); }
-.btn:focus-visible { outline: 4px solid #13496e; outline-offset: 3px; }
+.btn:focus-visible { outline: 4px solid var(--ink-deep); outline-offset: 3px; }
 .btn-round { width: 56px; height: 56px; min-width: 56px; min-height: 56px; border-radius: 50%; font-size: 26px; }
 
 /* language switch is a parent control: requires press-and-hold; the fill bar
    shows hold progress and retracts quickly when released early */
 #lang-btn { position: relative; overflow: hidden; }
-#lang-btn .hold-fill { position: absolute; inset: 0; background: rgba(21,94,141,.18); transform: scaleX(0); transform-origin: left; pointer-events: none; transition: transform .15s ease; }
+#lang-btn .hold-fill { position: absolute; inset: 0; background: color-mix(in srgb, var(--deep-water) 18%, transparent); transform: scaleX(0); transform-origin: left; pointer-events: none; transition: transform .15s ease; }
 #lang-btn.holding .hold-fill { transform: scaleX(1); transition: transform .7s linear; }
 
 /* hub game tiles: fixed three-band layout (animal zone / name / age) so
@@ -27,8 +50,8 @@ body { touch-action: none; user-select: none; -webkit-user-select: none; }
 .game-tile { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 18px 14px; overflow: hidden; }
 .game-tile .animal-zone { flex: 1 1 0; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; padding: 8px 0 10px; }
 .game-tile .animal-zone svg { width: 100%; height: 100%; }
-.game-tile .game-name { font-weight: 800; font-size: clamp(16px, 2.6vw, 24px); color: #13496e; }
-.game-tile .game-age { font-size: clamp(11px, 1.6vw, 15px); color: #3f6a87; }
+.game-tile .game-name { font-weight: 800; font-size: clamp(16px, 2.6vw, 24px); color: var(--ink-deep); }
+.game-tile .game-age { font-size: clamp(11px, 1.6vw, 15px); color: var(--slate-muted); }
 
 /* short screens (phone landscape): shrink text bands so the animal keeps the room */
 @media (max-height: 520px) {
@@ -41,7 +64,7 @@ body { touch-action: none; user-select: none; -webkit-user-select: none; }
 /* top bar shared by all scenes */
 .topbar { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; z-index: 10; pointer-events: none; }
 .topbar > * { pointer-events: auto; }
-.topbar .title { font-size: clamp(18px, 3.5vw, 30px); font-weight: 800; color: #13496e; text-shadow: 0 1px 0 rgba(255,255,255,.35); }
+.topbar .title { font-size: clamp(18px, 3.5vw, 30px); font-weight: 800; color: var(--ink-deep); text-shadow: var(--text-halo); }
 .topbar .controls { display: flex; gap: 10px; }
 
 /* animal animations */

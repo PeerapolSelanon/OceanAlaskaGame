@@ -4,10 +4,10 @@ import { byId, playCry } from './core/animals.js';
 import { onActivate } from './core/ui.js';
 
 const GAME_BUTTONS = [
-  { scene: 'tap-sea', nameKey: 'tapSea', ageKey: 'age12', animal: 'orca', color: '#79b8d6' },
-  { scene: 'shadow-match', nameKey: 'shadowMatch', ageKey: 'age24', animal: 'seal', color: '#f2a25c' },
-  { scene: 'count-tap', nameKey: 'countTap', ageKey: 'age35', animal: 'salmon', color: '#6ec99a' },
-  { scene: 'listen-find', nameKey: 'listenFind', ageKey: 'age35', animal: 'puffin', color: '#c98ad9' },
+  { scene: 'tap-sea', nameKey: 'tapSea', ageKey: 'age12', animal: 'orca', color: 'var(--glacier-blue)' },
+  { scene: 'shadow-match', nameKey: 'shadowMatch', ageKey: 'age24', animal: 'seal', color: 'var(--sunset-orange)' },
+  { scene: 'count-tap', nameKey: 'countTap', ageKey: 'age35', animal: 'salmon', color: 'var(--kelp-green)' },
+  { scene: 'listen-find', nameKey: 'listenFind', ageKey: 'age35', animal: 'puffin', color: 'var(--anemone-purple)' },
 ];
 
 export const hub = {
@@ -19,7 +19,7 @@ export const hub = {
       <div class="topbar">
         <div class="title">🌊 <span data-i18n="appTitle"></span></div>
         <div class="controls">
-          <button class="btn" id="lang-btn" style="padding:0 20px;font-weight:800;color:#155e8d;font-size:18px;min-height:56px;"><span class="hold-fill"></span><span class="lang-label"></span></button>
+          <button class="btn" id="lang-btn" style="padding:0 20px;font-weight:800;color:var(--deep-water);font-size:18px;min-height:56px;"><span class="hold-fill"></span><span class="lang-label"></span></button>
           <button class="btn btn-round" id="sound-btn"></button>
         </div>
       </div>
@@ -107,7 +107,7 @@ export const hub = {
         const note = document.createElement('div');
         note.id = 'voice-note';
         note.textContent = 'เครื่องนี้ยังไม่มีเสียงพูดภาษาไทย เกมจะพูดเฉพาะภาษาอังกฤษ — ลองเปิดด้วย Microsoft Edge หรือ iPad ซึ่งมีเสียงไทยในตัว';
-        note.style.cssText = 'position:absolute;bottom:4px;width:100%;text-align:center;color:#dceefb;font-size:13px;text-shadow:0 1px 3px rgba(0,30,60,.6);pointer-events:none;';
+        note.style.cssText = 'position:absolute;bottom:4px;width:100%;text-align:center;color:var(--glow-pale);font-size:13px;text-shadow:0 1px 3px rgba(0,30,60,.6);pointer-events:none;';
         container.appendChild(note);
       }
     }, 1500);
