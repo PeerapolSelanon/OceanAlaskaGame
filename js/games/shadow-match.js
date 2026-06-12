@@ -1,5 +1,4 @@
-import { byId, playCry } from '../core/animals.js';
-import { ANIMALS } from '../core/animals.js';
+import { byId, ANIMALS, playCry } from '../core/animals.js';
 import { speak, speakName, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
 import { pickRound } from './logic/round-utils.js';
@@ -60,6 +59,7 @@ export const shadowMatch = {
   },
 
   _startDrag(e, piece) {
+    if (this._drag) return; // one drag at a time — second finger ignored
     if (piece.dataset.done) return;
     e.preventDefault();
     try { piece.setPointerCapture(e.pointerId); } catch { /* synthetic events in tests lack active pointer */ }
