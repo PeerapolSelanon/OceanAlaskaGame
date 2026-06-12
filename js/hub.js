@@ -10,6 +10,7 @@ const GAME_BUTTONS = [
 ];
 
 export const hub = {
+  _nav: null,
   init(container, go) {
     container.insertAdjacentHTML('beforeend', `
       <div class="topbar">
@@ -44,20 +45,24 @@ export const hub = {
       btn.addEventListener('pointerup', () => {
         warmUp(); sfx.pop();
         speak(t(g.nameKey), getLang());
-        setTimeout(() => go(g.scene), 350);
+        hub._nav = setTimeout(() => go(g.scene), 350);
       });
       grid.appendChild(btn);
     }
 
     container.querySelector('#lang-btn').addEventListener('pointerup', () => {
-      toggleLang(); refreshText();
+      warmUp(); toggleLang(); refreshText();
       speak(t('appTitle'), getLang());
     });
     container.querySelector('#sound-btn').addEventListener('pointerup', () => {
-      setSoundOn(!isSoundOn()); refreshText();
+      warmUp(); setSoundOn(!isSoundOn()); refreshText();
       if (isSoundOn()) sfx.ding();
     });
     refreshText();
   },
-  destroy() {},
+  destroy() {
+    clearTimeout(this._nav);
+    this._nav = null;
+    try { speechSynthesis.cancel(); } catch {}
+  },
 };
