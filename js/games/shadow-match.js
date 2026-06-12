@@ -2,6 +2,7 @@ import { byId, ANIMALS, playCry } from '../core/animals.js';
 import { speak, speakName, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
 import { pickRound } from './logic/round-utils.js';
+import { confetti } from '../core/confetti.js';
 
 const ROUND_SIZE = 3;
 
@@ -114,7 +115,7 @@ export const shadowMatch = {
       if (this._remaining === 0) {
         sfx.cheer();
         speak(t('great'), getLang());
-        this._confetti();
+        this._timers.push(...confetti(this._container));
         this._timers.push(setTimeout(() => this._newRound(), 2200));
       }
     } else {
@@ -125,17 +126,6 @@ export const shadowMatch = {
       this._timers.push(setTimeout(() => {
         piece.style.cssText = 'touch-action:none;cursor:grab;position:relative;';
       }, 380));
-    }
-  },
-
-  _confetti() {
-    const colors = ['#f2a25c', '#6ec99a', '#79b8d6', '#c98ad9', '#f7d154'];
-    for (let i = 0; i < 30; i++) {
-      const p = document.createElement('div');
-      p.className = 'confetti';
-      p.style.cssText += `left:${10 + Math.random() * 80}%;top:0;background:${colors[i % colors.length]};animation-delay:${Math.random() * 0.4}s;`;
-      this._container.appendChild(p);
-      this._timers.push(setTimeout(() => p.remove(), 2200));
     }
   },
 

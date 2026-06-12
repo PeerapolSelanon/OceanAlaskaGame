@@ -2,6 +2,7 @@ import { ANIMALS } from '../core/animals.js';
 import { speak, sfx } from '../core/audio.js';
 import { getLang, t } from '../core/i18n.js';
 import { makeQuestion, nextDifficulty } from './logic/count-logic.js';
+import { confetti } from '../core/confetti.js';
 
 export const countTap = {
   _container: null,
@@ -76,24 +77,13 @@ export const countTap = {
       sfx.cheer();
       speak(t('great'), getLang());
       btn.style.background = 'linear-gradient(180deg,#a8e6c4,#6ec99a)';
-      this._confetti();
+      this._timers.push(...confetti(this._container));
       this._timers.push(setTimeout(() => this._newRound(), 1800));
     } else {
       sfx.wrongSoft();
       speak(t('tryAgain'), getLang());
       btn.classList.add('shake');
       this._timers.push(setTimeout(() => btn.classList.remove('shake'), 600));
-    }
-  },
-
-  _confetti() {
-    const colors = ['#f2a25c', '#6ec99a', '#79b8d6', '#c98ad9', '#f7d154'];
-    for (let i = 0; i < 30; i++) {
-      const p = document.createElement('div');
-      p.className = 'confetti';
-      p.style.cssText += `left:${10 + Math.random() * 80}%;top:0;background:${colors[i % colors.length]};animation-delay:${Math.random() * 0.4}s;`;
-      this._container.appendChild(p);
-      this._timers.push(setTimeout(() => p.remove(), 2200));
     }
   },
 
