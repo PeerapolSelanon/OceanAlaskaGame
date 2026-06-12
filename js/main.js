@@ -1,6 +1,7 @@
 import { ANIMALS } from './core/animals.js';
 import { hub } from './hub.js';
 import { tapSea } from './games/tap-sea.js';
+import { shadowMatch } from './games/shadow-match.js';
 import { countTap } from './games/count-tap.js';
 
 const scenes = {};
@@ -36,7 +37,7 @@ function stubScene(label) {
   };
 }
 registerScene('tap-sea', tapSea);
-registerScene('shadow-match', stubScene('จับคู่เงา'));
+registerScene('shadow-match', shadowMatch);
 registerScene('count-tap', countTap);
 registerScene('listen-find', stubScene('เสียงเรียกใคร'));
 
