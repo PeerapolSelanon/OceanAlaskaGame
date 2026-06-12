@@ -1,4 +1,5 @@
 import { ANIMALS } from './core/animals.js';
+import { hub } from './hub.js';
 
 const scenes = {};
 let current = null;
@@ -14,16 +15,28 @@ export function go(name) {
   current.init(app, go);
 }
 
-// Placeholder hub (replaced in Task 6)
-registerScene('hub', {
-  init(container) {
-    const h = document.createElement('h1');
-    h.textContent = 'ทะเลอลาสก้าของหนู 🌊';
-    h.style.cssText = 'color:#fff;text-align:center;padding-top:40vh;';
-    container.appendChild(h);
-  },
-  destroy() {},
-});
+registerScene('hub', hub);
+
+function stubScene(label) {
+  return {
+    init(container, go) {
+      const d = document.createElement('div');
+      d.style.cssText = 'color:#fff;text-align:center;padding-top:40vh;font-size:24px;';
+      d.textContent = label + ' — coming soon';
+      const back = document.createElement('button');
+      back.className = 'btn btn-round';
+      back.textContent = '🏠';
+      back.style.cssText += 'position:absolute;top:12px;left:12px;';
+      back.addEventListener('pointerup', () => go('hub'));
+      container.append(d, back);
+    },
+    destroy() {},
+  };
+}
+registerScene('tap-sea', stubScene('แตะทะเล'));
+registerScene('shadow-match', stubScene('จับคู่เงา'));
+registerScene('count-tap', stubScene('นับสัตว์ทะเล'));
+registerScene('listen-find', stubScene('เสียงเรียกใคร'));
 
 registerScene('preview', {
   init(container) {
