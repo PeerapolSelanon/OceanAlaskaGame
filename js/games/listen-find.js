@@ -5,6 +5,7 @@ import { pickQuestion } from './logic/round-utils.js';
 import { confetti } from '../core/confetti.js';
 
 const CHOICES = 4;
+const ANIMAL_IDS = ANIMALS.map(a => a.id);
 
 export const listenFind = {
   _container: null,
@@ -29,16 +30,17 @@ export const listenFind = {
   },
 
   _sayPrompt() {
+    if (!this._container || this._locked) return;
     const lang = getLang();
     const name = lang === 'th' ? this._target.th : this._target.en;
-    const text = `${t('whereIs')} ${name}?`;
+    const text = lang === 'th' ? `${name} อยู่ที่ไหนนะ?` : `${t('whereIs')} ${name}?`;
     this._container.querySelector('#prompt').textContent = text;
     speak(text, lang);
   },
 
   _newRound() {
     this._locked = false;
-    const { target, choices } = pickQuestion(ANIMALS.map(a => a.id), CHOICES);
+    const { target, choices } = pickQuestion(ANIMAL_IDS, CHOICES);
     this._target = byId(target);
     const grid = this._container.querySelector('#grid');
     grid.innerHTML = '';
@@ -60,14 +62,13 @@ export const listenFind = {
 
   _answer(card) {
     if (this._locked) return;
-    const animal = byId(card.dataset.id);
     const svg = card.querySelector('svg');
-    if (animal.id === this._target.id) {
+    if (card.dataset.id === this._target.id) {
       this._locked = true;
       sfx.cheer();
       svg.classList.add('boing');
-      playCry(animal);
-      speakName(animal, getLang());
+      playCry(this._target);
+      speakName(this._target, getLang());
       card.style.background = 'linear-gradient(180deg,#a8e6c4,#6ec99a)';
       this._timers.push(...confetti(this._container));
       this._timers.push(setTimeout(() => this._newRound(), 2400));
