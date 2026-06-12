@@ -5,6 +5,7 @@ export function registerScene(name, scene) { scenes[name] = scene; }
 
 export function go(name) {
   const app = document.getElementById('app');
+  if (!scenes[name]) { console.error(`go(): unknown scene "${name}"`); return; }
   if (current && current.destroy) current.destroy();
   app.innerHTML = '';
   current = scenes[name];
