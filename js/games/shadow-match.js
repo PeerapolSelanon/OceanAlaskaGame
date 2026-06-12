@@ -75,10 +75,12 @@ export const shadowMatch = {
     const up = (ev) => {
       piece.removeEventListener('pointermove', move);
       piece.removeEventListener('pointerup', up);
+      piece.removeEventListener('pointercancel', up);
       this._endDrag(ev);
     };
     piece.addEventListener('pointermove', move);
     piece.addEventListener('pointerup', up);
+    piece.addEventListener('pointercancel', up);
   },
 
   _moveDrag(e) {

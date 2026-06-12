@@ -2,3 +2,12 @@
 .playwright-mcp/
 *.png
 !assets/**/*.png
+# Added by code-review-graph
+.code-review-graph/
+server.log
+.claude/
+.cursorrules
+CLAUDE.md
+AGENTS.md
+.mcp.json
+node_modules/
