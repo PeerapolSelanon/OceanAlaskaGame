@@ -1,11 +1,17 @@
 .superpowers/
 .playwright-mcp/
+.impeccable/
 *.png
 !assets/**/*.png
 # Added by code-review-graph
 .code-review-graph/
 server.log
 .claude/
+.cursor/
+.gemini/
+.github/skills/
+.kiro/
+.qoder/
 .cursorrules
 CLAUDE.md
 AGENTS.md
