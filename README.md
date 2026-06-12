@@ -22,10 +22,20 @@ npx http-server -p 8080
 # animal art preview: http://localhost:8080/?preview=animals
 ```
 
+## เสียงพูดภาษาไทยไม่ทำงาน? / Thai speech not working?
+
+เกมใช้เสียงพูดจากระบบ (Web Speech API) — ถ้าเครื่องไม่มีเสียงภาษาไทย เกมจะพูดเฉพาะอังกฤษ
+
+- **Windows (Chrome):** Settings → Time & Language → Speech → Manage voices → **Add voices** → ค้นหา "ไทย / Thai" → ติดตั้ง แล้วปิด-เปิดเบราว์เซอร์ใหม่
+- **Windows (Edge):** มีเสียงไทยออนไลน์ในตัว (Premwadee) ใช้ได้ทันที ไม่ต้องติดตั้งอะไร
+- **iPad/iPhone:** มีเสียงไทย (Kanya) ในตัว — ถ้าเงียบ ดูที่ Settings → Accessibility → Spoken Content → Voices → Thai
+
+The game uses the system's speech voices. If Thai is silent, install a Thai voice (see above) or use Microsoft Edge / iPad which include one.
+
 ## ทดสอบ / Tests
 
 ```
-node --test tests/count-logic.test.mjs tests/round-utils.test.mjs tests/settings.test.mjs tests/i18n.test.mjs
+node --test tests/audio-voices.test.mjs tests/count-logic.test.mjs tests/round-utils.test.mjs tests/settings.test.mjs tests/i18n.test.mjs
 ```
 
 Vanilla JS + SVG. No build step, no dependencies.

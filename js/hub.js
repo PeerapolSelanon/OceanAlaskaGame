@@ -1,5 +1,5 @@
 import { t, getLang, toggleLang } from './core/i18n.js';
-import { speak, sfx, isSoundOn, setSoundOn, warmUp } from './core/audio.js';
+import { speak, sfx, isSoundOn, setSoundOn, warmUp, hasVoice } from './core/audio.js';
 import { byId } from './core/animals.js';
 
 const GAME_BUTTONS = [
@@ -11,6 +11,7 @@ const GAME_BUTTONS = [
 
 export const hub = {
   _nav: null,
+  _voiceCheck: null,
   init(container, go) {
     container.insertAdjacentHTML('beforeend', `
       <div class="topbar">
@@ -59,10 +60,25 @@ export const hub = {
       if (isSoundOn()) sfx.ding();
     });
     refreshText();
+
+    // Parent-facing note when the device has no Thai voice installed (e.g.
+    // Chrome on Windows without the Thai speech pack): Thai prompts would be
+    // silent. Checked after a delay so the async voice list has loaded.
+    hub._voiceCheck = setTimeout(() => {
+      if (getLang() === 'th' && !hasVoice('th') && !container.querySelector('#voice-note')) {
+        const note = document.createElement('div');
+        note.id = 'voice-note';
+        note.textContent = 'เครื่องนี้ยังไม่มีเสียงพูดภาษาไทย เกมจะพูดเฉพาะภาษาอังกฤษ — วิธีเพิ่มเสียงไทยอยู่ใน README';
+        note.style.cssText = 'position:absolute;bottom:4px;width:100%;text-align:center;color:#dceefb;font-size:13px;text-shadow:0 1px 3px rgba(0,30,60,.6);pointer-events:none;';
+        container.appendChild(note);
+      }
+    }, 1500);
   },
   destroy() {
     clearTimeout(this._nav);
     this._nav = null;
+    clearTimeout(this._voiceCheck);
+    this._voiceCheck = null;
     try { speechSynthesis.cancel(); } catch {}
   },
 };

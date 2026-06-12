@@ -38,17 +38,44 @@ export const sfx = {
 };
 
 // --- speech ---
-function pickVoice(langCode) {
-  const voices = speechSynthesis.getVoices();
-  return voices.find(v => v.lang && v.lang.toLowerCase().startsWith(langCode)) || null;
+// getVoices() is populated asynchronously in most browsers (empty until the
+// 'voiceschanged' event), so keep a cache that refreshes when the list loads.
+let voiceCache = [];
+function refreshVoices() {
+  try { voiceCache = speechSynthesis.getVoices(); } catch { voiceCache = []; }
+}
+if (typeof speechSynthesis !== 'undefined') {
+  refreshVoices();
+  try { speechSynthesis.addEventListener('voiceschanged', refreshVoices); }
+  catch { speechSynthesis.onvoiceschanged = refreshVoices; }
+}
+
+// Pure helper (unit-tested): find a voice whose BCP-47 tag is the wanted
+// language ('th' matches th-TH / th_TH / TH-TH, but not tr-TR).
+export function pickVoiceFrom(voices, langCode) {
+  const want = langCode.toLowerCase();
+  return voices.find(v => {
+    if (!v.lang) return false;
+    const tag = v.lang.toLowerCase().replace('_', '-');
+    return tag === want || tag.startsWith(want + '-');
+  }) || null;
+}
+
+// True when the device actually has a voice for this language. Lets the UI
+// warn that Thai speech needs a Thai voice installed (e.g. Chrome on Windows
+// only sees voices installed in Windows settings).
+export function hasVoice(lang) {
+  if (voiceCache.length === 0) refreshVoices();
+  return !!pickVoiceFrom(voiceCache, lang === 'th' ? 'th' : 'en');
 }
 
 export function speak(text, lang = 'th', { interrupt = true } = {}) {
   if (!soundOn || typeof speechSynthesis === 'undefined') return;
+  if (voiceCache.length === 0) refreshVoices(); // late engines (iOS) fill in after first gesture
   if (interrupt) speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = lang === 'th' ? 'th-TH' : 'en-US';
-  const voice = pickVoice(lang === 'th' ? 'th' : 'en');
+  const voice = pickVoiceFrom(voiceCache, lang === 'th' ? 'th' : 'en');
   if (voice) u.voice = voice;
   u.rate = 0.85;
   u.pitch = 1.1;
@@ -64,5 +91,5 @@ export function speakName(animal, currentLang) {
 
 // iOS requires voices to load after a user gesture; warm them up.
 export function warmUp() {
-  try { speechSynthesis.getVoices(); ctx(); } catch {}
+  try { refreshVoices(); ctx(); } catch {}
 }
