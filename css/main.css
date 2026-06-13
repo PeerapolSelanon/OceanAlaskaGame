@@ -101,7 +101,9 @@ body { touch-action: none; user-select: none; -webkit-user-select: none; }
 .mem-back .bub { position: absolute; border: 2px solid rgba(255,255,255,.4); border-radius: 50%; }
 .mem-front { background: linear-gradient(180deg, var(--foam-white), var(--ice-mist)); transform: rotateY(180deg); }
 .mem-front svg { width: 86%; height: 86%; }
-.mem-card.matched .mem-inner { animation: boing .55s ease; }
+/* bounce the whole card, not .mem-inner — boing's scale transform would
+   override the inner's rotateY(180deg) and briefly show the card back */
+.mem-card.matched { animation: boing .55s ease; }
 .mem-card.matched .mem-front { box-shadow: 0 0 0 4px var(--teal-mem), var(--shadow-soft-lift); }
 .mem-card:focus-visible { outline: 4px solid var(--foam-white); outline-offset: 3px; border-radius: 18px; }
 @media (prefers-reduced-motion: reduce) {
