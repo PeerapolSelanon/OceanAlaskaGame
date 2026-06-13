@@ -29,6 +29,9 @@ const STRINGS = {
   traceFollow: ['ลากนิ้วตามเส้นนะ', 'Follow the line with your finger'],
   watchAgain: ['ดูอีกครั้ง', 'Watch again'],
   unmuteSound: ['เปิดเสียง', 'Turn sound on'],
+  spellWord: ['สะกดคำ', 'Spell the Word'],
+  age47: ['4-7 ปี', 'Age 4-7'],
+  spellPrompt: ['ลากตัวอักษรมาสะกดคำนะ', 'Drag the letters to spell the word'],
 };
 
 let lang = get('lang', 'th');
