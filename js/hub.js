@@ -1,6 +1,7 @@
 import { t, getLang, toggleLang } from './core/i18n.js';
 import { speak, sfx, isSoundOn, setSoundOn, warmUp, hasVoice } from './core/audio.js';
 import { byId, playCry } from './core/animals.js';
+import { makeGameArt } from './core/game-art.js';
 import { onActivate, onTap } from './core/ui.js';
 
 const SHELVES = [
@@ -66,7 +67,7 @@ export const hub = {
         btn.style.borderBottom = `6px solid ${g.color}`;
         const zone = document.createElement('div');
         zone.className = 'animal-zone';
-        const svg = byId(g.animal).make(150);
+        const svg = makeGameArt(g);
         svg.classList.add('float');
         // each animal swims and blinks on its own beat, like a real tidepool
         svg.style.animationDuration = `${3 + i * 0.35}s`;
