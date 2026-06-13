@@ -18,6 +18,7 @@ colors:
   kelp-light: "#a8e6c4"
   anemone-purple: "#c98ad9"
   sun-gold: "#f7d154"
+  coral: "#ef7d6e"
 typography:
   display:
     fontFamily: "system-ui, -apple-system, 'Segoe UI', sans-serif"
@@ -90,6 +91,7 @@ components:
 - **Kelp Green** (#6ec99a): เกมนับสัตว์ทะเล (3-5 ปี)
 - **Anemone Purple** (#c98ad9): เกมเสียงเรียกใคร (3-5 ปี)
 - **Sun Gold** (#f7d154): สี accent ของเกมวาดตามรอย และสีที่ห้าของชุดคอนเฟตตี
+- **Coral** (#ef7d6e): สี accent ของเกมสะกดคำ
 - ใช้เป็นขอบล่างหนา 6px ของการ์ดเกมบน hub และเป็นสีนำของฉากในเกมนั้น — หนึ่งเกม หนึ่งสี ห้ามสลับ
 - **Source of truth ในโค้ด:** ทุกสี UI ถูกประกาศเป็น CSS custom properties บน `:root` ใน `css/main.css` ชื่อตรงกับเอกสารนี้ — โค้ดใหม่ต้องใช้ `var(--token)` ห้าม hardcode hex (ยกเว้นสีงานศิลป์สัตว์ใน animals.js)
 
