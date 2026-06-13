@@ -61,6 +61,20 @@ body { touch-action: none; user-select: none; -webkit-user-select: none; }
   .game-tile .game-age { font-size: 10px; }
 }
 
+/* hub shelves: vertical list of skill rows; each row scrolls horizontally.
+   Gameplay scenes keep touch-action:none — only the hub may pan. */
+#hub-shelves { position: absolute; inset: 84px 0 0; overflow-y: auto; overflow-x: hidden; touch-action: pan-y; padding: 0 4vw 4vh; -webkit-overflow-scrolling: touch; }
+.shelf { margin-bottom: 2.5vh; }
+.shelf-label { display: inline-flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 18px; border: none; border-radius: 16px; cursor: pointer; background: color-mix(in srgb, var(--abyss) 35%, transparent); color: var(--foam-white); font-family: inherit; font-weight: 800; font-size: clamp(16px, 2.4vw, 22px); text-shadow: 0 1px 3px rgba(0,30,60,.6); margin-bottom: 1.2vh; }
+.shelf-label:focus-visible { outline: 4px solid var(--foam-white); outline-offset: 3px; }
+.shelf-row { display: flex; gap: 2vw; overflow-x: auto; touch-action: pan-x pan-y; padding: 4px 2px 12px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.shelf-row::-webkit-scrollbar { display: none; }
+.shelf-row .game-tile { flex: 0 0 clamp(220px, 26vw, 320px); height: clamp(180px, 30vh, 250px); }
+@media (max-height: 520px) {
+  .shelf-label { min-height: 44px; font-size: 15px; }
+  .shelf-row .game-tile { flex-basis: 200px; height: 140px; }
+}
+
 /* top bar shared by all scenes */
 .topbar { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; z-index: 10; pointer-events: none; }
 .topbar > * { pointer-events: auto; }

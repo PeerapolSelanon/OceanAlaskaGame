@@ -1,13 +1,20 @@
 import { t, getLang, toggleLang } from './core/i18n.js';
 import { speak, sfx, isSoundOn, setSoundOn, warmUp, hasVoice } from './core/audio.js';
 import { byId, playCry } from './core/animals.js';
-import { onActivate } from './core/ui.js';
+import { onActivate, onTap } from './core/ui.js';
+
+const SHELVES = [
+  { id: 'hand-eye', icon: '🖐️', nameKey: 'shelfHandEye' },
+  { id: 'listen-lang', icon: '👂', nameKey: 'shelfListenLang' },
+  { id: 'count-think', icon: '🔢', nameKey: 'shelfCountThink' },
+];
 
 const GAME_BUTTONS = [
-  { scene: 'tap-sea', nameKey: 'tapSea', ageKey: 'age12', animal: 'orca', color: 'var(--glacier-blue)' },
-  { scene: 'shadow-match', nameKey: 'shadowMatch', ageKey: 'age24', animal: 'seal', color: 'var(--sunset-orange)' },
-  { scene: 'count-tap', nameKey: 'countTap', ageKey: 'age35', animal: 'salmon', color: 'var(--kelp-green)' },
-  { scene: 'listen-find', nameKey: 'listenFind', ageKey: 'age35', animal: 'puffin', color: 'var(--anemone-purple)' },
+  { scene: 'tap-sea', nameKey: 'tapSea', ageKey: 'age12', animal: 'orca', color: 'var(--glacier-blue)', shelf: 'hand-eye' },
+  { scene: 'shadow-match', nameKey: 'shadowMatch', ageKey: 'age24', animal: 'seal', color: 'var(--sunset-orange)', shelf: 'hand-eye' },
+  { scene: 'trace-letters', nameKey: 'traceLetters', ageKey: 'age36', animal: 'otter', color: 'var(--sun-gold)', shelf: 'hand-eye' },
+  { scene: 'listen-find', nameKey: 'listenFind', ageKey: 'age35', animal: 'puffin', color: 'var(--anemone-purple)', shelf: 'listen-lang' },
+  { scene: 'count-tap', nameKey: 'countTap', ageKey: 'age35', animal: 'salmon', color: 'var(--kelp-green)', shelf: 'count-think' },
 ];
 
 export const hub = {
@@ -23,7 +30,7 @@ export const hub = {
           <button class="btn btn-round" id="sound-btn"></button>
         </div>
       </div>
-      <div id="hub-grid" style="position:absolute;inset:84px 4vw 3vh;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2.5vh 2.5vw;"></div>
+      <div id="hub-shelves"></div>
     `);
     const refreshText = () => {
       container.querySelector('[data-i18n="appTitle"]').textContent = t('appTitle');
@@ -36,41 +43,56 @@ export const hub = {
       soundBtn.setAttribute('aria-label', isSoundOn() ? t('muteSound') : t('unmuteSound'));
       container.querySelectorAll('[data-game-name]').forEach(n => { n.textContent = t(n.dataset.gameName); });
       container.querySelectorAll('[data-game-age]').forEach(n => { n.textContent = t(n.dataset.gameAge); });
+      container.querySelectorAll('[data-shelf-name]').forEach(n => { n.textContent = t(n.dataset.shelfName); });
     };
 
-    const grid = container.querySelector('#hub-grid');
-    GAME_BUTTONS.forEach((g, i) => {
-      const btn = document.createElement('button');
-      btn.className = 'btn game-tile';
-      btn.style.borderBottom = `6px solid ${g.color}`;
-      const zone = document.createElement('div');
-      zone.className = 'animal-zone';
-      const svg = byId(g.animal).make(150);
-      svg.classList.add('float');
-      // each animal swims and blinks on its own beat, like a real tidepool
-      svg.style.animationDuration = `${3 + i * 0.35}s`;
-      svg.style.animationDelay = `-${i * 0.9}s`;
-      svg.style.setProperty('--blink-delay', `${i * 1.1}s`);
-      zone.appendChild(svg);
-      btn.appendChild(zone);
-      btn.insertAdjacentHTML('beforeend', `
-        <div class="game-name" data-game-name="${g.nameKey}"></div>
-        <div class="game-age" data-game-age="${g.ageKey}"></div>
-      `);
-      const launch = () => {
-        if (hub._nav) return; // already heading into a game
-        warmUp();
-        playCry(byId(g.animal));
-        svg.classList.remove('float');
-        svg.style.animationDuration = ''; // stagger values are for float only
-        svg.style.animationDelay = '';
-        svg.classList.add('boing');
-        speak(t(g.nameKey), getLang());
-        hub._nav = setTimeout(() => go(g.scene), 650);
-      };
-      onActivate(btn, launch);
-      grid.appendChild(btn);
-    });
+    const shelves = container.querySelector('#hub-shelves');
+    for (const sh of SHELVES) {
+      const section = document.createElement('section');
+      section.className = 'shelf';
+      const label = document.createElement('button');
+      label.className = 'shelf-label';
+      label.innerHTML = `<span aria-hidden="true">${sh.icon}</span><span data-shelf-name="${sh.nameKey}"></span>`;
+      onActivate(label, () => { warmUp(); speak(t(sh.nameKey), getLang()); });
+      section.appendChild(label);
+      const row = document.createElement('div');
+      row.className = 'shelf-row';
+      section.appendChild(row);
+      shelves.appendChild(section);
+
+      GAME_BUTTONS.filter(g => g.shelf === sh.id).forEach((g, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn game-tile';
+        btn.style.borderBottom = `6px solid ${g.color}`;
+        const zone = document.createElement('div');
+        zone.className = 'animal-zone';
+        const svg = byId(g.animal).make(150);
+        svg.classList.add('float');
+        // each animal swims and blinks on its own beat, like a real tidepool
+        svg.style.animationDuration = `${3 + i * 0.35}s`;
+        svg.style.animationDelay = `-${i * 0.9}s`;
+        svg.style.setProperty('--blink-delay', `${i * 1.1}s`);
+        zone.appendChild(svg);
+        btn.appendChild(zone);
+        btn.insertAdjacentHTML('beforeend', `
+          <div class="game-name" data-game-name="${g.nameKey}"></div>
+          <div class="game-age" data-game-age="${g.ageKey}"></div>
+        `);
+        const launch = () => {
+          if (hub._nav) return; // already heading into a game
+          warmUp();
+          playCry(byId(g.animal));
+          svg.classList.remove('float');
+          svg.style.animationDuration = ''; // stagger values are for float only
+          svg.style.animationDelay = '';
+          svg.classList.add('boing');
+          speak(t(g.nameKey), getLang());
+          hub._nav = setTimeout(() => go(g.scene), 650);
+        };
+        onTap(btn, launch); // tap launches; shelf scroll-drag doesn't
+        row.appendChild(btn);
+      });
+    }
 
     // language switch: press-and-hold so little hands can't flip it by accident
     // (keyboard Enter/Space still toggles instantly — that's a parent at a PC)
