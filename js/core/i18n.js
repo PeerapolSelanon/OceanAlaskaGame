@@ -32,6 +32,9 @@ const STRINGS = {
   spellWord: ['สะกดคำ', 'Spell the Word'],
   age47: ['4-7 ปี', 'Age 4-7'],
   spellPrompt: ['ลากตัวอักษรมาสะกดคำนะ', 'Drag the letters to spell the word'],
+  memoryMatch: ['ความจำจับคู่', 'Memory Match'],
+  age37: ['3-7 ปี', 'Age 3-7'],
+  memoryPrompt: ['พลิกการ์ดหาคู่ที่เหมือนกันนะ', 'Flip the cards to find matching pairs'],
 };
 
 let lang = get('lang', 'th');

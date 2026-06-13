@@ -18,6 +18,7 @@
   --anemone-purple: #c98ad9;
   --sun-gold: #f7d154;
   --coral: #ef7d6e;
+  --teal-mem: #2fb6a8;
   --shadow-soft-lift: 0 6px 16px rgba(0, 20, 40, .3);
   --text-halo: 0 1px 0 rgba(255, 255, 255, .35);
 }
@@ -89,6 +90,23 @@ body { touch-action: none; user-select: none; -webkit-user-select: none; }
 .spell-slot.filled { border-style: solid; border-color: var(--coral); background: linear-gradient(180deg, var(--foam-white), var(--ice-mist)); }
 .spell-slot.filled .ghost { opacity: 1; color: var(--coral); }
 .spell-tile { width: clamp(60px, 11vw, 82px); height: clamp(70px, 13vw, 92px); min-width: 0; min-height: 0; padding: 0; font: 800 clamp(32px, 7vw, 54px) system-ui, sans-serif; color: var(--ink-deep); cursor: grab; }
+
+/* memory-match: flip cards in a responsive grid */
+#memory-grid { position: absolute; inset: 72px 4vw 3vh; display: grid; gap: 2vmin; align-content: center; justify-items: center; }
+.mem-card { width: 100%; height: 100%; max-width: 150px; max-height: 150px; min-width: 80px; min-height: 80px; aspect-ratio: 1; border: none; background: none; padding: 0; cursor: pointer; perspective: 600px; }
+.mem-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .35s ease; border-radius: 18px; }
+.mem-card.up .mem-inner { transform: rotateY(180deg); }
+.mem-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 18px; box-shadow: var(--shadow-soft-lift); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.mem-back { background: linear-gradient(180deg, var(--mid-water), var(--deep-water)); }
+.mem-back .bub { position: absolute; border: 2px solid rgba(255,255,255,.4); border-radius: 50%; }
+.mem-front { background: linear-gradient(180deg, var(--foam-white), var(--ice-mist)); transform: rotateY(180deg); }
+.mem-front svg { width: 86%; height: 86%; }
+.mem-card.matched .mem-inner { animation: boing .55s ease; }
+.mem-card.matched .mem-front { box-shadow: 0 0 0 4px var(--teal-mem), var(--shadow-soft-lift); }
+.mem-card:focus-visible { outline: 4px solid var(--foam-white); outline-offset: 3px; border-radius: 18px; }
+@media (prefers-reduced-motion: reduce) {
+  .mem-inner { transition: none; }
+}
 
 /* top bar shared by all scenes */
 .topbar { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; z-index: 10; pointer-events: none; }
