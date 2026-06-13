@@ -53,6 +53,19 @@ const SCENES = {
     [[18, .7], [33, .45], [48, .25]].forEach(([r, op]) =>
       stroke(el('path', { d: `M 116 74 m 0 -${r} a ${r} ${r} 0 0 1 0 ${2 * r}` }, s), color, 4, `opacity:${op}`));
   },
+  // สะกดคำ: ปู + ไทล์ตัวอักษรเรียง มีช่องว่างหนึ่งช่อง
+  'spell-word'(s, color) {
+    placeAnimal(s, 'crab', 62, 2, 76);
+    [['C', 16], ['R', 62], ['A', 108]].forEach(([ch, x]) => {
+      const r = el('rect', { x, y: 98, width: 40, height: 44, rx: 8 }, s);
+      r.style.cssText = `fill:var(--foam-white);stroke:${color};stroke-width:3`;
+      const tx = el('text', { x: x + 20, y: 130, 'text-anchor': 'middle' }, s);
+      tx.textContent = ch;
+      tx.style.cssText = 'font:800 26px system-ui,sans-serif;fill:var(--ink-deep)';
+    });
+    const slot = el('rect', { x: 154, y: 98, width: 40, height: 44, rx: 8 }, s);
+    slot.style.cssText = `fill:none;stroke:${color};stroke-width:3;stroke-dasharray:4 5`;
+  },
   // นับสัตว์ทะเล: three little salmon counted 1-2-3
   'count-tap'(s) {
     [10, 72, 134].forEach((x, i) => {

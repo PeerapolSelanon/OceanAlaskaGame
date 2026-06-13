@@ -5,6 +5,7 @@ import { shadowMatch } from './games/shadow-match.js';
 import { countTap } from './games/count-tap.js';
 import { listenFind } from './games/listen-find.js';
 import { traceLetters } from './games/trace-letters.js';
+import { spellWord } from './games/spell-word.js';
 
 const scenes = {};
 let current = null;
@@ -27,6 +28,7 @@ registerScene('shadow-match', shadowMatch);
 registerScene('count-tap', countTap);
 registerScene('listen-find', listenFind);
 registerScene('trace-letters', traceLetters);
+registerScene('spell-word', spellWord);
 
 registerScene('preview', {
   init(container) {

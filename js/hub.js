@@ -15,6 +15,7 @@ const GAME_BUTTONS = [
   { scene: 'shadow-match', nameKey: 'shadowMatch', ageKey: 'age24', animal: 'seal', color: 'var(--sunset-orange)', shelf: 'hand-eye' },
   { scene: 'trace-letters', nameKey: 'traceLetters', ageKey: 'age36', animal: 'otter', color: 'var(--sun-gold)', shelf: 'hand-eye' },
   { scene: 'listen-find', nameKey: 'listenFind', ageKey: 'age35', animal: 'puffin', color: 'var(--anemone-purple)', shelf: 'listen-lang' },
+  { scene: 'spell-word', nameKey: 'spellWord', ageKey: 'age47', animal: 'crab', color: 'var(--coral)', shelf: 'listen-lang' },
   { scene: 'count-tap', nameKey: 'countTap', ageKey: 'age35', animal: 'salmon', color: 'var(--kelp-green)', shelf: 'count-think' },
 ];
 
