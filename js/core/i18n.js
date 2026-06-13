@@ -20,6 +20,14 @@ const STRINGS = {
   switchLang: ['เปลี่ยนภาษา (กดค้างไว้)', 'Switch language (press and hold)'],
   muteSound: ['ปิดเสียง', 'Mute sound'],
   listenAgain: ['ฟังอีกครั้ง', 'Listen again'],
+  shelfHandEye: ['มือกับตา', 'Hands & Eyes'],
+  shelfListenLang: ['ฟังกับภาษา', 'Listening & Language'],
+  shelfCountThink: ['นับกับคิด', 'Counting & Thinking'],
+  traceLetters: ['วาดตามรอย', 'Trace Letters'],
+  age36: ['3-6 ปี', 'Age 3-6'],
+  pickLetter: ['เลือกตัวอักษรที่อยากวาดเลย!', 'Pick a letter to trace!'],
+  traceFollow: ['ลากนิ้วตามเส้นนะ', 'Follow the line with your finger'],
+  watchAgain: ['ดูอีกครั้ง', 'Watch again'],
   unmuteSound: ['เปิดเสียง', 'Turn sound on'],
 };
 
