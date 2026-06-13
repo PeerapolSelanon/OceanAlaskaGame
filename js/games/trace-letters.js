@@ -97,7 +97,7 @@ export const traceLetters = {
       return p;
     };
     const strokes = letter.strokes.map((d) => {
-      const base = mk(d, { stroke: 'var(--shallow-water)', 'stroke-width': 10, 'stroke-dasharray': '1 14', opacity: '.9' });
+      const base = mk(d, { stroke: 'var(--shallow-water)', 'stroke-width': 7, 'stroke-dasharray': '1 9', opacity: '.9' });
       const fill = mk(d, { stroke: 'var(--sun-gold)', 'stroke-width': 11 });
       const len = fill.getTotalLength();
       fill.setAttribute('stroke-dasharray', String(len));
