@@ -14,6 +14,7 @@ export function onActivate(el, handler) {
 export function onTap(el, handler) {
   let down = null;
   el.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY }; });
+  el.addEventListener('pointercancel', () => { down = null; });
   el.addEventListener('pointerup', (e) => {
     const wasTap = down && Math.hypot(e.clientX - down.x, e.clientY - down.y) < 10;
     down = null;
