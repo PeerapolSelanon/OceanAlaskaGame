@@ -5,8 +5,10 @@ export const SPELL_WORDS = [
   { word: 'CRAB', animal: 'crab' },
   { word: 'ORCA', animal: 'orca' },
   { word: 'SEAL', animal: 'seal' },
+  { word: 'STAR', animal: 'seastar' },
   { word: 'OTTER', animal: 'otter' },
   { word: 'WHALE', animal: 'humpback' },
+  { word: 'SHARK', animal: 'shark' },
   { word: 'PUFFIN', animal: 'puffin' },
   { word: 'SALMON', animal: 'salmon' },
 ];
