@@ -147,7 +147,7 @@ export const traceLetters = {
     };
     const celebrate = () => {
       startDot.remove();
-      svg.classList.add('boing');
+      svg.classList.add('animal', 'boing'); // .animal.boing is the squash-pop rule
       sfx.cheer();
       this._timers.push(...confetti(stage));
       const lang = getLang();
@@ -179,7 +179,7 @@ export const traceLetters = {
     };
 
     wrap.addEventListener('pointerdown', (e) => {
-      if (!this._trace) return;
+      if (!this._trace || state.active) return; // ignore a second finger mid-stroke
       warmUp();
       const p = toSvg(e);
       if (isNearStart([cs().points[Math.min(state.idx, cs().points.length - 1)]], p, START_RADIUS_PX / scale())) {
