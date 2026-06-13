@@ -6,6 +6,7 @@ import { countTap } from './games/count-tap.js';
 import { listenFind } from './games/listen-find.js';
 import { traceLetters } from './games/trace-letters.js';
 import { spellWord } from './games/spell-word.js';
+import { memoryMatch } from './games/memory-match.js';
 
 const scenes = {};
 let current = null;
@@ -29,6 +30,7 @@ registerScene('count-tap', countTap);
 registerScene('listen-find', listenFind);
 registerScene('trace-letters', traceLetters);
 registerScene('spell-word', spellWord);
+registerScene('memory-match', memoryMatch);
 
 registerScene('preview', {
   init(container) {

@@ -75,6 +75,17 @@ const SCENES = {
       n.style.cssText = 'font:800 26px system-ui,sans-serif;fill:var(--ink-deep)';
     });
   },
+  // ความจำจับคู่: การ์ดคว่ำสองใบ มีเครื่องหมาย ?
+  'memory-match'(s, color) {
+    placeAnimal(s, 'octopus', 70, 0, 84);
+    [[28, -6], [110, 6]].forEach(([x, rot]) => {
+      const card = el('rect', { x, y: 96, width: 54, height: 64, rx: 9, transform: `rotate(${rot} ${x + 27} 128)` }, s);
+      card.style.cssText = `fill:var(--foam-white);stroke:${color};stroke-width:3`;
+      const q = el('text', { x: x + 27, y: 140, 'text-anchor': 'middle', transform: `rotate(${rot} ${x + 27} 128)` }, s);
+      q.textContent = '?';
+      q.style.cssText = `font:800 34px system-ui,sans-serif;fill:${color}`;
+    });
+  },
 };
 
 // g: { scene, animal, color } — color is a var(--token) string.

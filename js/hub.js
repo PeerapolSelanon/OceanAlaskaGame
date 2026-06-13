@@ -17,6 +17,7 @@ const GAME_BUTTONS = [
   { scene: 'listen-find', nameKey: 'listenFind', ageKey: 'age35', animal: 'puffin', color: 'var(--anemone-purple)', shelf: 'listen-lang' },
   { scene: 'spell-word', nameKey: 'spellWord', ageKey: 'age47', animal: 'crab', color: 'var(--coral)', shelf: 'listen-lang' },
   { scene: 'count-tap', nameKey: 'countTap', ageKey: 'age35', animal: 'salmon', color: 'var(--kelp-green)', shelf: 'count-think' },
+  { scene: 'memory-match', nameKey: 'memoryMatch', ageKey: 'age37', animal: 'octopus', color: 'var(--teal-mem)', shelf: 'count-think' },
 ];
 
 export const hub = {
