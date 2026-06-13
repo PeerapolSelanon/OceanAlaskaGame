@@ -148,6 +148,8 @@ export const spellWord = {
     } else {
       tile.style.transition = 'transform .35s ease'; // bounce home, no scolding
       tile.style.transform = 'translate3d(0, 0, 0)';
+      // then drop back into the flex flow so it can't overlap reflowed siblings
+      this._timers.push(setTimeout(() => { tile.style.cssText = 'touch-action: none;'; }, 360));
     }
   },
 
